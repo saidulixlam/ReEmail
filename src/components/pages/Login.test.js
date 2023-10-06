@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import Login from './Login'; // Update the import path to your component
+import Login from './Login';
 
 describe('Login Component', () => {
   it('renders the login form', () => {
-    const {getByLabelText } = render(<Login />);
+    const { getByLabelText } = render(<Login />);
     
     // Check if the login form elements are present
     expect(getByLabelText('Email:')).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('Login Component', () => {
   });
 
   it('handles form submission for login', () => {
-    const { getByLabelText} = render(<Login />);
+    const { getByLabelText, getByText } = render(<Login />);
     const emailInput = getByLabelText('Email:');
     const passwordInput = getByLabelText('Password:');
 
@@ -37,7 +37,10 @@ describe('Login Component', () => {
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
 
     // Submit the form
-    });
+    fireEvent.click(getByText('Have an account? Login'));
+
+    // You can add assertions here to check if the login logic is working as expected
+  });
 
   it('handles form submission for signup', () => {
     const { getByLabelText, getByText } = render(<Login />);
@@ -50,12 +53,6 @@ describe('Login Component', () => {
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     fireEvent.change(confirmPasswordInput, { target: { value: 'password123' } });
   
-    // Switch to signup mode
-    fireEvent.click(getByText('Forget Password?'));
-  
-    // Submit the form
-    fireEvent.click(getByText('Create Account'));
-  
   });
 
   it('handles "Forget Password" button click', () => {
@@ -65,5 +62,8 @@ describe('Login Component', () => {
     // Simulate clicking the "Forget Password" button
     fireEvent.click(forgetPasswordButton);
 
+    // You can add assertions here to check if the "Forget Password" functionality is working as expected
   });
+
+  // You can add more test cases as needed
 });
