@@ -1,30 +1,32 @@
 import './App.css';
-import Login from './components/pages/Login';
+// import Login from './components/pages/Login';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './components/pages/Home';
-import { useState } from 'react';
-
+import { Fragment} from 'react';
+import { useSelector } from 'react-redux';
+import NavBar from './components/Navbar/Navbar';
+import Inbox from './components/Email/Inbox';
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+const isLoggedIn = useSelector(state=>state.auth.isLoggedIn);
+console.log(isLoggedIn);
 
   // Function to handle successful login
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
+ 
   return (
-    <Router>
-      {!isLoggedIn &&  
-        <Login onLogin={handleLogin} />}
+    <Fragment>
       
-        
+      <Router>
+      {isLoggedIn && <NavBar/>}
         <Switch>
-          <Route path="/home" exact><Home/>
-            
+          <Route path="/" exact><Home/>
+          </Route>
+          <Route path="/inbox"><Inbox/>
+          </Route>
+          <Route path="/home"><Home/>
           </Route>
         </Switch>
-      
     </Router>
+    </Fragment>
   );
 }
 

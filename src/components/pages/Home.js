@@ -1,9 +1,17 @@
+// import { Fragment } from "react";
+// import { authActions } from "../../store/authSlice";
+import { useSelector} from "react-redux";
+// import { Container } from "react-bootstrap";
+import Login from '../pages/Login';
+import EmailNavigation from "../Email/EmailNavigation";
 import { Fragment } from "react";
-
 const Home = () => {
-    return ( 
+    const token=useSelector(state=>state.auth.token);
+    
+    return (
         <Fragment>
-            <h1 className="text-center my-5 mx-5">Welcome home</h1>
+            {token&&<EmailNavigation />}
+            {!token&&<Login/>}
         </Fragment>
      );
 }

@@ -3,12 +3,22 @@ import { Form, Button, Col, NavLink } from 'react-bootstrap';
 import Layout from '../../ui/Layout';
 import { bgurl } from '../../ui/background';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../store/authSlice';
 
 const Login = () => {
   const history = useHistory();
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmpasswordRef = useRef();
+
+  const dispatch = useDispatch();
+
+  const token = localStorage.getItem('token');
+
+  if(token){
+    dispatch(authActions.login(token));
+  }
 
   const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState(null);
@@ -42,11 +52,11 @@ const Login = () => {
     if (isLogin) {
       // Handle login
       url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA2DXczNTfKu7REsrtSLgSoJQS--AqAMkI';
     } else {
       // Handle signup
       url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAgGnMLqkFKJf5KduGtLESSQoaaEzpd4sM';
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA2DXczNTfKu7REsrtSLgSoJQS--AqAMkI';
     }
 
     // Now authenticating with firebase
@@ -77,13 +87,12 @@ const Login = () => {
     //  
       const data = await response.json();
       const email = data.email;
-      const token = data.idToken;
-      // console.log(token);
+      dispatch(authActions.login(data.idToken)); 
       const endpoint = `${email.replace(/\.|@/g, '')}`;
       localStorage.setItem('endpoint', endpoint);
-      // Redirect to Home component after successful login
-      history.replace('/home');
-      // Set the login state to true
+      localStorage.setItem('email',email);
+      history.replace('/');
+      
       setLoggedIn(true);
     } catch (err) {
       alert(err.message);
@@ -105,7 +114,7 @@ const Login = () => {
     <Layout>
       {!isLoggedIn && (
         <div style={backgroundStyle} className="d-flex justify-content-center align-items-center min-vh-100">
-          <Col md={3} lg={3} className="border p-3 my-1 rounded bg-info text-light shadow mx-1">
+          <Col md={4} lg={4} className="border p-3 my-1 rounded bg-info text-light shadow mx-1">
             <h1 className="text-center">{isLogin ? 'Login' : 'Sign Up'}</h1>
             {error && <h5 className="text-danger text-center">{error}</h5>}
             <Form onSubmit={submitHandler}>

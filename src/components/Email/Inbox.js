@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 
-const Navbar = () => {
+const Inbox = () => {
     return ( 
         <Fragment>
-            
+            <h1>I am inbox</h1>
         </Fragment>
      );
 }
  
-export default Navbar;
+export default Inbox;
