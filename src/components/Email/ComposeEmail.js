@@ -90,7 +90,7 @@ const ComposeEmail = (props) => {
     };
 
     return (
-        <Modal show={props.show} onHide={props.handleClose} size="lg" className='my-5 p-5'>
+        <Modal show={props.show} onHide={props.handleClose} size="lg" className='mt-5 py-5'>
             <Modal.Header closeButton>
                 <Modal.Title>Compose Email</Modal.Title>
             </Modal.Header>
