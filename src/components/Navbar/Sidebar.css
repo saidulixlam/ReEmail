@@ -1,0 +1,30 @@
+/* Sidebar CSS */
+.col-auto.min-vh-100.bg-dark.collapsed {
+    width: 0; /* Collapse the sidebar */
+    overflow-x: hidden;
+    transition: 0.3s; /* Add a smooth transition */
+  }
+  
+  /* Style for the toggle button/icon */
+  .btn-toggle-sidebar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1; /* Ensure it's above the sidebar */
+  }
+  
+  /* Custom styles for the navigation links */
+  .nav-link {
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 4px; /* Consistent border radius value */
+  }
+  
+  /* Custom styles for active navigation links */
+  .activeNavLink {
+    background-color: #fff;
+    border: 2px solid red;
+    border-radius: 4px;
+    color: #007bff;
+  }
+  
