@@ -13,16 +13,22 @@ const EmailItem = ({ email, onClick }) => {
         pathname: `/email/${email.subject}`,
         state: { emailData: email }
       }}
-      style={{ textDecoration: 'none' }}
+      style={{ textDecoration: 'none', color: 'black' }}
       onClick={handleItemClick} // Call the handleItemClick function when the link is clicked
     >
       <Card className="email-item">
-        <Card.Body className="d-flex justify-content-between align-items-center">
-          <input type="checkbox" className="mr-2" />
-          <Card.Title>{email.to}</Card.Title>
-          <Card.Title>{email.subject}</Card.Title>
-          <Card.Text>{email.body}</Card.Text>
-          <span className="email-date mr-3">{email.time}</span>
+        <Card.Body className="d-flex flex-column">
+          <div className="d-flex justify-content-between align-items-center">
+            
+              <input type="checkbox" className="mr-2" />
+              <Card.Title className="mb-0">{email.to}</Card.Title>
+              <Card.Title className="mb-2">{email.subject}</Card.Title>
+            
+              <small className="text-muted">{email.time}</small>
+            
+          </div>
+          
+          <Card.Text>{email.snippet}</Card.Text>
         </Card.Body>
       </Card>
     </Link>

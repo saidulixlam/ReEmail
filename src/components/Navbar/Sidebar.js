@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Button } from 'react-bootstrap';
 import { authActions } from '../../store/authSlice';
+import { toggleSidebar, setShowModal, setActiveFolder } from '../../store/uiSlice'; // Import Redux actions
 import Inbox from '../Email/Inbox';
 import Sent from '../Email/Sent';
 import Draft from '../Email/Draft';
@@ -10,78 +11,91 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const SideBar = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [activeFolder, setActiveFolder] = useState('inbox');
-
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const isSidebarCollapsed = useSelector((state) => state.ui.isSidebarCollapsed);
+  const showModal = useSelector((state) => state.ui.showModal);
+  const activeFolder = useSelector((state) => state.ui.activeFolder);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   function LogoutHandler() {
     dispatch(authActions.logout());
   }
 
-  const toggleFolder = folderName => {
-    setActiveFolder(folderName);
+  const toggleFolder = (folderName) => {
+    dispatch(setActiveFolder(folderName)); // Dispatch the action to update activeFolder
+  };
+
+  const toggleModal = () => {
+    dispatch(setShowModal(!showModal)); // Dispatch the action to toggle showModal
   };
 
   return (
     <div>
       {isLoggedIn && (
         <div className={`d-flex`}>
-          {/* Toggle button for sidebar */}
-          <button
-            className={`btn btn-primary position-absolute top-0 start-0`}
-            style={{ zIndex: '1', marginTop: '10px', marginLeft: '10px', width: '40px' }}
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          >
-            <i className={`bi bi-chevron-${isSidebarCollapsed ? 'right' : 'left'}`}></i>
-          </button>
           <div
             className={`vh-100 bg-dark ${isSidebarCollapsed ? 'd-none' : ''}`}
-            style={{minWidth: '200px', maxWidth: '10%' }}
+            style={{
+              minWidth: '200px',
+              maxWidth: '200px',
+              overflow: 'hidden',
+              [`d-lg-block ${isSidebarCollapsed ? 'd-none' : ''}`]: true,
+            }}
           >
-            <ul className="p-2">
+            <ul className="p-1">
               <Container fluid>
-                {showModal && <ComposeEmail show={showModal} handleClose={() => setShowModal(false)} />}
-              </Container>
-              <Button
-                onClick={() => setShowModal(true)}
-                variant="light"
-                className="nav-link px-2"
-                style={{ fontWeight: 'bold', borderRadius: '4px' }}
-              >
-                <i className="bi bi-send">
-                  <span className="d-none d-sm-inline">Compose</span>
-                </i>
-              </Button>
-              {['inbox', 'sent', 'draft'].map(folderName => (
+                <div className='flex-grow-1 my-2 p-2'>
+                  <h3 className='text-white'>Re-Mail</h3>
+                </div>
+
+                {showModal && <ComposeEmail show={showModal} handleClose={toggleModal} />}
+
+                <Button
+                  onClick={toggleModal}
+                  variant="light"
+                  className="nav-link px-2 w-100 "
+                  style={{ fontWeight: 'bold', borderRadius: '4px', maxWidth: '100%' }}
+                >
+                  <div className="d-flex align-items-center justify-content-between">
+                    <span className="d-sm-inline">Compose</span>
+                    <i className="bi bi-send ms-2"></i>
+                  </div>
+                </Button>
+
+                {['inbox', 'sent', 'draft'].map(folderName => (
+                  <a
+                    key={folderName}
+                    className={`nav-link px-2  ${activeFolder === folderName ? 'active' : ''} w-100 d-flex justify-content-between align-items-center`}
+                    style={{
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                      maxWidth: '100%',
+                    }}
+                    onClick={() => toggleFolder(folderName)}
+                  >
+                    <i
+                      className={`bi bi-${folderName === 'inbox' ? 'inbox' : folderName === 'sent' ? 'box-arrow-up-right' : 'floppy'} ms-1`}
+                      style={{ order: 2 }}
+                    ></i>
+                    <span className="d-sm-inline me-1" style={{ order: 1 }}>
+                      {folderName.charAt(0).toUpperCase() + folderName.slice(1)}
+                    </span>
+                  </a>
+                ))}
                 <a
-                  key={folderName}
-                  className={`nav-link px-2 ${activeFolder === folderName ? 'active' : ''}`}
+                  className={`nav-link px-1 w-100 d-flex justify-content-between`}
                   style={{
                     cursor: 'pointer',
                     borderRadius: '4px',
+                    maxWidth: '100%',
+                    alignItems: 'center', // To vertically center the content
                   }}
-                  onClick={() => toggleFolder(folderName)}
+                  onClick={LogoutHandler}
                 >
-                  <i className={`bi bi-${folderName === 'inbox' ? 'inbox' : folderName === 'sent' ? 'box-arrow-up-right' : 'floppy'}`}>
-                    <span className="ms-1 d-none d-sm-inline">{folderName.charAt(0).toUpperCase() + folderName.slice(1)}</span>
-                  </i>
+                  <span className="ms-1 d-sm-inline">Logout</span>
+                  <i className={`bi bi-box-arrow-right`}></i>
                 </a>
-              ))}
-              <a
-                className={`nav-link px-2`}
-                style={{
-                  cursor: 'pointer',
-                  borderRadius: '4px',
-                }}
-                onClick={LogoutHandler}
-              >
-                <i className={`bi bi-box-arrow-right`}>
-                  <span className="ms-1 d-none d-sm-inline">Logout</span>
-                </i>
-              </a>
+              </Container>
             </ul>
           </div>
           <div className='flex-grow-1'>

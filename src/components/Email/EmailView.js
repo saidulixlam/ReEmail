@@ -18,8 +18,8 @@ const EmailView = (props) => {
     <div>
       <div className="d-flex justify-content-between">
         <h2>Email Subject: {emailData.subject}</h2>
-        <button className="btn btn-secondary" onClick={handleCloseModal}>
-          Close
+        <button className="btn btn-danger" onClick={handleCloseModal}>
+          x
         </button>
       </div>
       <p>To: {emailData.to}</p>

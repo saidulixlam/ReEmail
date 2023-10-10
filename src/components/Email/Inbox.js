@@ -12,7 +12,7 @@ const Inbox = () => {
   const [emailArray, setEmailArray] = useState([]);
   const [selectedEmail, setSelectedEmail] = useState(null); // State to track selected email
   const [showEmailView, setShowEmailView] = useState(false); // State to control the visibility of the EmailView modal
-console.log('Am i rendering');
+  console.log('Am i rendering');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,39 +57,23 @@ console.log('Am i rendering');
   };
 
   return (
-    <div>
-      {/* Conditionally render Inbox or EmailView based on showEmailView */}
-      {showEmailView &&
-        <EmailView email={selectedEmail} onClose={handleCloseEmailView} />}
-      
-      {!showEmailView && <Fragment>
-        {/* Your inbox content goes here */}
-        <h1>Inbox</h1>
-        {emailArray.map((email, index) => (
-          <EmailItem
-            key={index}
-            email={email}
-            onClick={() => handleEmailClick(email)}
-          />
-        ))}
-      </Fragment>}
-      
-{/* 
-      EmailView modal
-      <Modal show={showEmailView} onHide={handleCloseEmailView}>
-        <Modal.Header closeButton>
-          <Modal.Title>Email View</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedEmail && <EmailView email={selectedEmail} />}
-        </Modal.Body>
-        <Modal.Footer>
-          <button className="btn btn-secondary" onClick={handleCloseEmailView}>
-            Close
-          </button>
-        </Modal.Footer>
-      </Modal> */}
-    </div>
+    <div className='mx-1 my-1 p-1' style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
+  {/* Conditionally render Inbox or EmailView based on showEmailView */}
+  {showEmailView &&
+    <EmailView email={selectedEmail} onClose={handleCloseEmailView} />}
+  
+  {!showEmailView && <Fragment>
+    {/* Your inbox content goes here */}
+    
+    {emailArray.map((email, index) => (
+      <EmailItem
+        key={index}
+        email={email}
+        onClick={() => handleEmailClick(email)}
+      />
+    ))}
+  </Fragment>}
+</div>
   );
 };
 
