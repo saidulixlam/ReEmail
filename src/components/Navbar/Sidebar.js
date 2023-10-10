@@ -2,13 +2,14 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Button } from 'react-bootstrap';
 import { authActions } from '../../store/authSlice';
-import { toggleSidebar, setShowModal, setActiveFolder } from '../../store/uiSlice'; // Import Redux actions
+import { setShowModal, setActiveFolder } from '../../store/uiSlice'; // Import Redux actions
 import Inbox from '../Email/Inbox';
 import Sent from '../Email/Sent';
 import Draft from '../Email/Draft';
 import ComposeEmail from '../Email/ComposeEmail';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect } from 'react';
 
 const SideBar = () => {
   const isSidebarCollapsed = useSelector((state) => state.ui.isSidebarCollapsed);
@@ -17,6 +18,19 @@ const SideBar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
+  const emails = useSelector((state)=>state.email.emails);
+
+
+    const unreadCount = emails.reduce((count, email) => {
+      if (!email.read) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+  useEffect(()=>{
+    console.log(emails);
+  },[]);
+  console.log(unreadCount);
   function LogoutHandler() {
     dispatch(authActions.logout());
   }
@@ -77,9 +91,19 @@ const SideBar = () => {
                       className={`bi bi-${folderName === 'inbox' ? 'inbox' : folderName === 'sent' ? 'box-arrow-up-right' : 'floppy'} ms-1`}
                       style={{ order: 2 }}
                     ></i>
+                    
                     <span className="d-sm-inline me-1" style={{ order: 1 }}>
                       {folderName.charAt(0).toUpperCase() + folderName.slice(1)}
                     </span>
+                    {folderName === 'inbox' && (
+                      <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">{unreadCount}+new</span>
+                    )}
+                    {folderName === 'sent' && (
+                      <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">1+new</span>
+                    )}
+                    {folderName === 'draft' && (
+                      <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">1+new</span>
+                    )}
                   </a>
                 ))}
                 <a

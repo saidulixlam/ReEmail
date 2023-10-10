@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Form, FormControl, Button,Container } from 'react-bootstrap';
+import { Navbar, FormControl, Button, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSidebar } from '../../store/uiSlice'; // Import the toggleSidebar action
@@ -17,10 +17,10 @@ const NavBar = () => {
   return (
     <Fragment>
       <Navbar expand="lg" className="bg-info">
-      <Container
-    className="d-flex justify-content-between align-items-center w-100"
-    style={{ paddingLeft: 0, paddingRight: 0 }} // Set padding to 0 to take 100% width
-  >
+        <Container
+          className="d-flex justify-content-between align-items-center w-100"
+          style={{ paddingLeft: 0, paddingRight: 0 }} // Set padding to 0 to take 100% width
+        >
           <Button
             className={`btn btn-primary rounded mx-1 p-1`} // Rounded button
             style={{ zIndex: '10' }}
@@ -40,7 +40,7 @@ const NavBar = () => {
             <Button
               variant="light"
               className="search-icon"
-              style={{ border: 'none', background: 'transparent', padding: '0'}}
+              style={{ border: 'none', background: 'transparent', padding: '0' }}
             >
               <i className="bi bi-search p-1 mx-1 lg-2"></i>
             </Button>

@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import EmailItem from './EmailItems'; // Assuming you have an EmailItem component
 import EmailView from './EmailView'; // Assuming you have an EmailView component
-import Modal from 'react-bootstrap/Modal'; // Import Bootstrap modal component
 import { Fragment } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { emailActions, emailSlice } from '../../store/emailSlice';
 
 const Inbox = () => {
   const endpoint = localStorage.getItem('endpoint');
   const url = 'https://remail-341c0-default-rtdb.firebaseio.com';
 
+  const dispatch = useDispatch();
+  const emails = useSelector((state)=>state.email.emails);
+  console.log(emails);
   // Define emailArray as a state variable
-  const [emailArray, setEmailArray] = useState([]);
+  // const [emailArray, setEmailArray] = useState([]);
   const [selectedEmail, setSelectedEmail] = useState(null); // State to track selected email
   const [showEmailView, setShowEmailView] = useState(false); // State to control the visibility of the EmailView modal
-  console.log('Am i rendering');
+  
   useEffect(() => {
+   
     const fetchData = async () => {
       try {
         const response = await fetch(`${url}/sent/${endpoint}.json`, {
@@ -25,11 +30,21 @@ const Inbox = () => {
 
         if (response.ok) {
           const responseData = await response.json(); // Parse response JSON
-          console.log('Data retrieved successfully:', responseData);
-          const newArray = Object.values(responseData);
-
+          // console.log('Data retrieved successfully:', responseData);
+        
+          // Iterate through the response data and assign unique keys
+          const newDataWithKeys = {};
+          Object.keys(responseData).forEach((key) => {
+            newDataWithKeys[key] = responseData[key];
+            newDataWithKeys[key].id = key; // Add a unique 'id' property to each data item
+          });
+        
+          // Convert the modified data back to an array
+          const newArray = Object.values(newDataWithKeys);
+        
           // Update the emailArray state with the retrieved data
-          setEmailArray(newArray);
+          dispatch(emailActions.setEmails(newArray))
+          // setEmailArray(newArray);
         } else {
           console.error('Failed to retrieve data.');
         }
@@ -40,20 +55,18 @@ const Inbox = () => {
 
     // Call the fetchData function when needed
     fetchData();
-  }, [endpoint]); // Make sure to include endpoint in the dependency array
+  }, [emailSlice]); // Make sure to include endpoint in the dependency array
 
   // Function to handle clicking on an email item
   const handleEmailClick = (email) => {
     setSelectedEmail(email);
     setShowEmailView(true); // Show the EmailView modal
-    console.log('email clikc');
   };
 
   // Function to close the EmailView modal
   const handleCloseEmailView = () => {
     setShowEmailView(false);
     setSelectedEmail(null);
-    console.log('emailClose clikc');
   };
 
   return (
@@ -65,7 +78,7 @@ const Inbox = () => {
   {!showEmailView && <Fragment>
     {/* Your inbox content goes here */}
     
-    {emailArray.map((email, index) => (
+    {emails.map((email, index) => (
       <EmailItem
         key={index}
         email={email}
