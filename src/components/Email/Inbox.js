@@ -11,8 +11,6 @@ const Inbox = () => {
 
   const dispatch = useDispatch();
   const emails = useSelector((state)=>state.email.emails);
-  console.log(emails);
-
 
   const [selectedEmail, setSelectedEmail] = useState(null); // State to track selected email
   const [showEmailView, setShowEmailView] = useState(false); // State to control the visibility of the EmailView modal
@@ -67,7 +65,7 @@ const Inbox = () => {
     setShowEmailView(false);
     setSelectedEmail(null);
   };
-console.log('i am inbox');
+
   return (
     <div className='mx-1 my-1 p-1' style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
   {/* Conditionally render Inbox or EmailView based on showEmailView */}

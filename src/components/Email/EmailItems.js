@@ -3,7 +3,6 @@ import {Card,Button} from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { emailActions } from '../../store/emailSlice';
-// import axios from 'axios';
 const unreadDotStyle = {
   width: '15px',
   height: '15px',
@@ -17,8 +16,7 @@ const EmailItem = ({ email, onClick }) => {
   const url='https://remail-341c0-default-rtdb.firebaseio.com';
   const dispatch=useDispatch();
   const key = email.id;
-  console.log(key);
-  //deleteitem
+ 
   const deleteHandler = async (event) => {
     event.preventDefault();
     event.stopPropagation();
@@ -36,7 +34,7 @@ const EmailItem = ({ email, onClick }) => {
   
       if (response.ok) {
         const responseData = await response.json(); // You can extract and log the response data
-        console.log('Email deleted successfully:', responseData);
+        
         dispatch(emailActions.deleteEmail(key));
         // If you need to perform any additional actions, you can do so here
       } else {
@@ -47,7 +45,6 @@ const EmailItem = ({ email, onClick }) => {
       // You can display an error message to the user or handle the error as needed.
     }
   };
-  
   
 //individual item displaying
   const handleItemClick = () => {

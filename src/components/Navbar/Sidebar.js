@@ -27,10 +27,7 @@ const SideBar = () => {
       }
       return count;
     }, 0);
-  useEffect(()=>{
-    console.log(emails);
-  },[]);
-  console.log(unreadCount);
+  
   function LogoutHandler() {
     dispatch(authActions.logout());
   }
