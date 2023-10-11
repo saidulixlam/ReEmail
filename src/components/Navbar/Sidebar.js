@@ -9,7 +9,7 @@ import Draft from '../Email/Draft';
 import ComposeEmail from '../Email/ComposeEmail';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 const SideBar = () => {
   const isSidebarCollapsed = useSelector((state) => state.ui.isSidebarCollapsed);
@@ -19,7 +19,7 @@ const SideBar = () => {
   const dispatch = useDispatch();
 
   const emails = useSelector((state)=>state.email.emails);
-
+  console.log(emails);
 
     const unreadCount = emails.reduce((count, email) => {
       if (!email.read) {

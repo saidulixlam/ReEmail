@@ -1,66 +1,74 @@
 import React, { useEffect, useState } from 'react';
-import EmailItem from './EmailItems'; // Assuming you have an EmailItem component
-import EmailView from './EmailView'; // Assuming you have an EmailView component
+import EmailItem from './EmailItems';
+import EmailView from './EmailView';
 import { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { emailActions, emailSlice } from '../../store/emailSlice';
+import { emailActions } from '../../store/emailSlice';
 
 const Inbox = () => {
   const endpoint = localStorage.getItem('endpoint');
   const url = 'https://remail-341c0-default-rtdb.firebaseio.com';
 
   const dispatch = useDispatch();
-  const emails = useSelector((state)=>state.email.emails);
+  const emails = useSelector((state) => state.email.emails);
 
-  const [selectedEmail, setSelectedEmail] = useState(null); // State to track selected email
-  const [showEmailView, setShowEmailView] = useState(false); // State to control the visibility of the EmailView modal
-  
-  useEffect(() => {
-   
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${url}/sent/${endpoint}.json`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [showEmailView, setShowEmailView] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0); // State to store the unread email count
+
+  const fetchDataAndUpdateStore = async () => {
+    try {
+      const response = await fetch(`${url}/sent/${endpoint}.json`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        const newDataWithKeys = {};
+        Object.keys(responseData).forEach((key) => {
+          newDataWithKeys[key] = responseData[key];
+          newDataWithKeys[key].id = key;
         });
 
-        if (response.ok) {
-          const responseData = await response.json(); // Parse response JSON
-          // console.log('Data retrieved successfully:', responseData);
-        
-          // Iterate through the response data and assign unique keys
-          const newDataWithKeys = {};
-          Object.keys(responseData).forEach((key) => {
-            newDataWithKeys[key] = responseData[key];
-            newDataWithKeys[key].id = key; // Add a unique 'id' property to each data item
-          });
-        
-          // Convert the modified data back to an array
-          const newArray = Object.values(newDataWithKeys);
-        
-          // Update the emailArray state with the retrieved data
-          dispatch(emailActions.setEmails(newArray))
-          // setEmailArray(newArray);
-        } else {
-          console.error('Failed to retrieve data.');
-        }
-      } catch (error) {
-        console.error('Error retrieving data:', error);
-      }
-    };
+        const newArray = Object.values(newDataWithKeys);
 
-    // Call the fetchData function when needed
-    fetchData();
-  }, []);
-  // Function to handle clicking on an email item
-  const handleEmailClick = (email) => {
-    setSelectedEmail(email);
-    setShowEmailView(true); // Show the EmailView modal
+        dispatch(emailActions.setEmails(newArray));
+
+        // Calculate the unread email count
+        const newUnreadCount = newArray.reduce((count, email) => {
+          return !email.read ? count + 1 : count;
+        }, 0);
+
+        setUnreadCount(newUnreadCount);
+      } else {
+        console.error('Failed to retrieve data.');
+      }
+    } catch (error) {
+      console.error('Error retrieving data:', error);
+    }
   };
 
-  // Function to close the EmailView modal
+  useEffect(() => {
+    fetchDataAndUpdateStore();
+
+    const intervalId = setInterval(() => {
+      fetchDataAndUpdateStore();
+    }, 2000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const handleEmailClick = (email) => {
+    setSelectedEmail(email);
+    setShowEmailView(true);
+  };
+
   const handleCloseEmailView = () => {
     setShowEmailView(false);
     setSelectedEmail(null);
@@ -68,22 +76,20 @@ const Inbox = () => {
 
   return (
     <div className='mx-1 my-1 p-1' style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-  {/* Conditionally render Inbox or EmailView based on showEmailView */}
-  {showEmailView &&
-    <EmailView email={selectedEmail} onClose={handleCloseEmailView} />}
-  
-  {!showEmailView && <Fragment>
-    {/* Your inbox content goes here */}
-    
-    {emails.map((email, index) => (
-      <EmailItem
-        key={index}
-        email={email}
-        onClick={() => handleEmailClick(email)}
-      />
-    ))}
-  </Fragment>}
-</div>
+      <div className="d-flex justify-content-between">
+        <h3>Inbox</h3>
+        <div>Unread: {unreadCount}</div>
+      </div>
+      {showEmailView && <EmailView email={selectedEmail} onClose={handleCloseEmailView} />}
+
+      {!showEmailView && (
+        <Fragment>
+          {emails.map((email, index) => (
+            <EmailItem key={index} email={email} onClick={() => handleEmailClick(email)} />
+          ))}
+        </Fragment>
+      )}
+    </div>
   );
 };
 
