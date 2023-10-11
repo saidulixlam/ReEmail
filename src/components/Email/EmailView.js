@@ -1,47 +1,49 @@
 import React from 'react';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
+import { emailActions } from '../../store/emailSlice';
 
 const EmailView = (props) => {
   const location = useLocation();
   const emailData = location.state.emailData; // Access the email data from the location state
-  const key=emailData.id;
-  const endpoint=localStorage.getItem('endpoint');
-  console.log(key);
-  const history = useHistory();
-  const url='https://remail-341c0-default-rtdb.firebaseio.com';
-  const updatedData={...emailData,read:true};
-  console.log(updatedData);
+  const key = emailData.id;
+  const endpoint = localStorage.getItem('endpoint');
 
-  useEffect(()=>{
-    async function update(){
-      try{
-        const response = await fetch(`${url}/sent/${endpoint}/${key}.json`, {
-          method: 'PUT', // or 'PATCH' depending on your API's requirements
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedData),
-        });
-        
-        if (response.ok) {
-          // The item was successfully updated
-          console.log(`Item at ${endpoint} updated successfully.`);
-        } else {
-          // Handle the error here
-          console.error(`Error updating item at ${endpoint}:`, response.status, response.statusText);
-        }
-      }catch(err){
-        console.log('err',err);
+  const history = useHistory();
+  const url = 'https://remail-341c0-default-rtdb.firebaseio.com';
+  const updatedData = { ...emailData, read: true };
+  const dispatch = useDispatch();
+
+  async function update() {
+    try {
+      const response = await fetch(`${url}/sent/${endpoint}/${key}.json`, {
+        method: 'PUT', // or 'PATCH' depending on your API's requirements
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        // The item was successfully updated
+        console.log(`Item at ${endpoint} updated successfully.`);
+        dispatch(emailActions.markEmailAsRead(key))
+      } else {
+        // Handle the error here
+        console.error(`Error updating item at ${endpoint}:`, response.status, response.statusText);
       }
+    } catch (err) {
+      console.log('err', err);
     }
-    update();
-  },[]);
+  }
+
   // Function to handle closing the modal
   const handleCloseModal = () => {
     // You can use the history object to navigate back to the inbox or any other route
     history.goBack(); // This will navigate back to the previous route (inbox)
     props.onClose();
+    update();
   };
 
   return (

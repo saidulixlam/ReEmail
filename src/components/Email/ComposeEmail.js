@@ -33,9 +33,9 @@ const ComposeEmail = (props) => {
         
         setMailBody(body.getCurrentContent().getPlainText());
     },[body])
-
+    const url='https://remail-341c0-default-rtdb.firebaseio.com';
     const sendEmail =async () => {
-        const url='https://remail-341c0-default-rtdb.firebaseio.com';
+        // const url='https://remail-341c0-default-rtdb.firebaseio.com';
         const formatDate = (date) => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -70,6 +70,7 @@ const ComposeEmail = (props) => {
             if (response.ok) {
                 console.log('Email sent successfully.');
                 dispatch(emailActions.resetEmailComposition());
+                dispatch(emailActions.addEmailToInbox(sentEmailData));
             } else {
                 console.error('Failed to send email.');
             }
@@ -78,6 +79,7 @@ const ComposeEmail = (props) => {
         }
         props.handleClose();
     };
+   
 
     const deleteEmail = () => {
         const confirmDelete = window.confirm('Are you sure you want to delete this email?');
