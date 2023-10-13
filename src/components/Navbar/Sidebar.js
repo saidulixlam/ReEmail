@@ -29,6 +29,8 @@ const SideBar = () => {
     }, 0);
   
   function LogoutHandler() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('endpoint')
     dispatch(authActions.logout());
   }
 

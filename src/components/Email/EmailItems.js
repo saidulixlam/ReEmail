@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { emailActions } from '../../store/emailSlice';
+
 const unreadDotStyle = {
   width: '15px',
   height: '15px',
@@ -33,7 +34,7 @@ const EmailItem = ({ email, onClick }) => {
       });
 
       if (response.ok) {
-        const responseData = await response.json(); // You can extract and log the response data
+        // const responseData = await response.json(); // You can extract and log the response data
 
         dispatch(emailActions.deleteEmail(key));
         // If you need to perform any additional actions, you can do so here
@@ -49,13 +50,12 @@ const EmailItem = ({ email, onClick }) => {
   //individual item displaying
   const handleItemClick = () => {
     onClick(email); // Call the onClick function with the email as a parameter
-    console.log('am i runing emailitem ');
   };
-  console.log(email);
+
   return (
     <Link
       to={{
-        pathname: `/email/${email.subject}`,
+        pathname: `/emails/${email.id}`,
         state: { emailData: email }
       }}
       style={{ textDecoration: 'none', color: 'black' }}

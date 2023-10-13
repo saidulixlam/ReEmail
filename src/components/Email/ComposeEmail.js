@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Container } from 'react-bootstrap';
+import { Button, Modal, Container, Form } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { emailActions } from '../../store/emailSlice';
 
 const ComposeEmail = (props) => {
-
     const dispatch = useDispatch();
     const [mailBody, setMailBody] = useState("");
 
     const { email, subject, body } = useSelector((state) => state.email);
 
-    // const token = localStorage.getItem('token');
     const senderEmail = localStorage.getItem('email');
     const endpoint = localStorage.getItem('endpoint');
 
@@ -25,17 +23,16 @@ const ComposeEmail = (props) => {
     };
 
     const handleEditorStateChange = (editorState) => {
-
         dispatch(emailActions.setEmailBody(editorState));
     };
-    //so we will need to change the editor content into plain content 
-    useEffect(() => {
 
+    useEffect(() => {
         setMailBody(body.getCurrentContent().getPlainText());
-    }, [body])
+    }, [body]);
+
     const url = 'https://remail-341c0-default-rtdb.firebaseio.com';
+
     const sendEmail = async () => {
-        // const url='https://remail-341c0-default-rtdb.firebaseio.com';
         const formatDate = (date) => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -55,7 +52,7 @@ const ComposeEmail = (props) => {
             read: false,
             recieve: false,
             send: true,
-            sender: senderEmail
+            sender: senderEmail,
         }
 
         try {
@@ -70,9 +67,8 @@ const ComposeEmail = (props) => {
             if (response.ok) {
                 console.log('Email sent successfully.');
                 dispatch(emailActions.resetEmailComposition());
-               
             } else {
-                console.error('Failed to send email.');
+                alert('Failed to send email.');
             }
         } catch (error) {
             console.error('Error sending email:', error);
@@ -80,14 +76,11 @@ const ComposeEmail = (props) => {
         props.handleClose();
     };
 
-
     const deleteEmail = () => {
         const confirmDelete = window.confirm('Are you sure you want to delete this email?');
         if (confirmDelete) {
-            // Implement email deletion logic here
             console.log('Email deleted.');
         }
-        // Close the modal
         props.handleClose();
     };
 
@@ -98,26 +91,35 @@ const ComposeEmail = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Container>
-                    <input
-                        type='email'
-                        value={email}
-                        onChange={handleEmailChange}
-                        placeholder='To Email'
-                        className="form-control my-2"
-                    />
-                    <input
-                        type='text'
-                        value={subject}
-                        onChange={handleSubjectChange}
-                        placeholder='Subject'
-                        className="form-control my-2"
-                    />
-                    <Editor
-                        size='lg'
-                        editorState={body}
-                        onEditorStateChange={handleEditorStateChange}
-                        placeholder='Write your Email here'
-                    />
+                    <Form.Group>
+                        <Form.Label>To Email</Form.Label>
+                        <div className="rounded p-1">
+                            <Form.Control
+                                type='email'
+                                value={email}
+                                onChange={handleEmailChange}
+                                placeholder='To Email'
+                            />
+                        </div>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Subject</Form.Label>
+                        <Form.Control
+                            type='text'
+                            value={subject}
+                            onChange={handleSubjectChange}
+                            placeholder='Subject'
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Write your Email here</Form.Label>
+                        <Editor
+                            size='lg'
+                            editorState={body}
+                            onEditorStateChange={handleEditorStateChange}
+                            placeholder='Write your Email here'
+                        />
+                    </Form.Group>
                 </Container>
             </Modal.Body>
             <Modal.Footer>

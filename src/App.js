@@ -18,7 +18,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/inbox" exact component={Inbox} />
           {/* Add a route for viewing individual emails */}
-          <Route path="/inbox/email/:subject" component={EmailView} />
+          <Route path="/inbox/emails/:subject" component={EmailView} />
         </Switch>
       </Router>
     </Fragment>
