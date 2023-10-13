@@ -34,7 +34,7 @@ const EmailView = (props) => {
 
   async function update() {
     try {
-      const response = await fetch(`${url}/sent/${endpoint}/${key}.json`, {
+      const response = await fetch(`${url}/inbox/${endpoint}/${key}.json`, {
         method: 'PUT', // or 'PATCH' depending on your API's requirements
         headers: {
           'Content-Type': 'application/json',

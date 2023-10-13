@@ -6,8 +6,9 @@ import { useSelector } from 'react-redux';
 import useMailAPI from '../utils/useMail';
 
 const Inbox = () => {
-  const emails = useSelector((state) => state.email.emails);
-  const emailItems = useMailAPI();
+  const emails = useSelector((state) => state.email.inboxEmails);
+  console.log(emails);
+  const emailItems = useMailAPI('inbox');
 
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [showEmailView, setShowEmailView] = useState(false);

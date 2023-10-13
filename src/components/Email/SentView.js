@@ -7,7 +7,6 @@ import { Button, Container } from 'react-bootstrap';
 const SentView = (props) => {
   const location = useLocation();
   const emailData = location.state.emailData; // Access the email data from the location state
- 
 
   const timeParts = emailData.time.split(' ');
 
@@ -21,13 +20,11 @@ const SentView = (props) => {
   ];
   const day = date.getDate();
   const month = date.getMonth(); // Returns a zero-based index (0 for January, 1 for February, etc.)
- 
+
   const formattedMonth = monthNames[month];
   const formattedDate = ` ${day} ${formattedMonth}`;
 
   const history = useHistory();
- 
-
 
   // Function to handle closing the modal
   const handleCloseModal = () => {
@@ -35,7 +32,7 @@ const SentView = (props) => {
     history.goBack(); // This will navigate back to the previous route (inbox)
     props.onClose();
   };
-console.log(emailData);
+  
   return (
     <Container className="mt-4">
       <button className="btn btn-info my-2" onClick={handleCloseModal}>

@@ -18,10 +18,10 @@ const SideBar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
-  const emails = useSelector((state)=>state.email.emails);
-  console.log(emails);
+  const inboxEmails = useSelector((state)=>state.email.inboxEmails);
+  console.log(inboxEmails);
 
-    const unreadCount = emails.reduce((count, email) => {
+    const unreadCount = inboxEmails.reduce((count, email) => {
       if (!email.read) {
         return count + 1;
       }

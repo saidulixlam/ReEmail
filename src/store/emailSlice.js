@@ -2,19 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 import { EditorState } from "draft-js";
 
 const emailInitialState = {
-    emails: [],
+    inboxEmails: [],
+    sentEmails: [],
     email: '',
     subject: '',
     body: EditorState.createEmpty()
 }
 
-console.log(emailInitialState.emails);
 export const emailSlice = createSlice({
     name: 'email',
     initialState: emailInitialState,
     reducers: {
-        setEmails: (state, action) => {
-            state.emails = action.payload;
+        setInboxEmails: (state, action) => {
+            state.inboxEmails = action.payload;
+        },
+        setSentEmails: (state, action) => {
+            state.sentEmails = action.payload;
         },
         setEmail: (state, action) => {
             state.email = action.payload
@@ -30,22 +33,20 @@ export const emailSlice = createSlice({
             state.body = EditorState.createEmpty();
         },
         deleteEmail: (state, action) => {
-            // Implement the logic to delete the email from the emails array
             const emailIdToDelete = action.payload;
-            state.emails = state.emails.filter(email => email.id !== emailIdToDelete);
+            state.inboxEmails = state.inboxEmails.filter(email => email.id !== emailIdToDelete);
+            state.sentEmails = state.sentEmails.filter(email => email.id !== emailIdToDelete);
         },
         markEmailAsRead: (state, action) => {
             const emailIdToMarkAsRead = action.payload;
-            state.emails = state.emails.map(email => {
+            state.inboxEmails = state.inboxEmails.map(email => {
                 if (email.id === emailIdToMarkAsRead) {
-                    // Update the email's read property to true
                     return { ...email, read: true };
                 }
                 return email;
             });
         }
     }
+});
 
-})
-
-export const emailActions = emailSlice.actions
+export const emailActions = emailSlice.actions;

@@ -1,49 +1,42 @@
-import React, {useState } from 'react';
-import EmailItem from './EmailItems'; // Assuming you have an EmailItem component
-import { Fragment } from 'react';
-import {useSelector } from 'react-redux';
-
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import SentView from './SentView';
+import useMailAPI from '../utils/useMail';
+import SentItems from './SentItems';
 
 const Sent = () => {
-  const emails = useSelector((state)=>state.email.emails);
- console.log(emails);
-  const [selectedEmail, setSelectedEmail] = useState(null); // State to track selected email
-  const [showEmailView, setShowEmailView] = useState(false); // State to control the visibility of the EmailView modal
-  
-  
-    // Call the fetchData function when needed
-  
-  // Function to handle clicking on an email item
+  const sentEmails = useSelector((state) => state.email.sentEmails);
+  const sent = useMailAPI('sent');
+
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [showEmailView, setShowEmailView] = useState(false);
+
   const handleEmailClick = (email) => {
     setSelectedEmail(email);
-    setShowEmailView(true); // Show the EmailView modal
+    setShowEmailView(true);
   };
 
-  // Function to close the EmailView modal
   const handleCloseEmailView = () => {
     setShowEmailView(false);
     setSelectedEmail(null);
   };
-console.log(emails);
+
   return (
     <div className='mx-1 my-1 p-1' style={{ overflowX: 'auto', whiteSpace: 'nowrap' }}>
-  {/* Conditionally render Inbox or EmailView based on showEmailView */}
-  {showEmailView &&
-    <SentView email={selectedEmail} onClose={handleCloseEmailView} />}
-  
-  {!showEmailView && <Fragment>
-    {/* Your inbox content goes here */}
-    
-    {emails.map((email, index) => (
-      <EmailItem
-        key={index}
-        email={email}
-        onClick={() => handleEmailClick(email)}
-      />
-    ))}
-  </Fragment>}
-</div>
+      {showEmailView && <SentView email={selectedEmail} onClose={handleCloseEmailView} />}
+
+      {!showEmailView && (
+        <>
+          {sentEmails.map((email) => (
+            <SentItems
+              key={email.id}
+              email={email}
+              onClick={() => handleEmailClick(email)}
+            />
+          ))}
+        </>
+      )}
+    </div>
   );
 };
 

@@ -4,11 +4,12 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { emailActions } from '../../store/emailSlice';
+import useMailAPI from '../utils/useMail';
 
 const ComposeEmail = (props) => {
     const dispatch = useDispatch();
     const [mailBody, setMailBody] = useState("");
-
+    const sent = useMailAPI('sent');
     const { email, subject, body } = useSelector((state) => state.email);
 
     const senderEmail = localStorage.getItem('email');
@@ -53,9 +54,32 @@ const ComposeEmail = (props) => {
             recieve: false,
             send: true,
             sender: senderEmail,
-        }
-
+        };
+    
+        const receivedEmailData = {
+            from: senderEmail,
+            subject: subject,
+            body: mailBody,
+            time: formattedDate,
+            read: false,
+            recieve: true,
+            send: false,
+            sender: senderEmail,
+        };
+    
         try {
+            // Send the email to the receiver's inbox
+            const modifiedEmail = email.replace(/[^a-zA-Z0-9]/g, '');
+            console.log(modifiedEmail);
+            await fetch(`${url}/inbox/${modifiedEmail}.json`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(receivedEmailData),
+            });
+    
+            // Send the email to the sender's sent folder
             const response = await fetch(`${url}/sent/${endpoint}.json`, {
                 method: 'POST',
                 headers: {
@@ -63,9 +87,9 @@ const ComposeEmail = (props) => {
                 },
                 body: JSON.stringify(sentEmailData),
             });
-
+    
             if (response.ok) {
-                console.log('Email sent successfully.');
+                sent.fetchDataAndUpdateStore('sent')
                 dispatch(emailActions.resetEmailComposition());
             } else {
                 alert('Failed to send email.');
@@ -74,6 +98,7 @@ const ComposeEmail = (props) => {
             console.error('Error sending email:', error);
         }
         props.handleClose();
+    
     };
 
     const deleteEmail = () => {

@@ -4,27 +4,13 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { emailActions } from '../../store/emailSlice';
 
-const unreadDotStyle = {
-  width: '15px',
-  height: '15px',
-  backgroundColor: 'blue',
-  borderRadius: '50%',
-  display: 'inline-block',
-  marginLeft: '5px', // Adjust as needed
-};
-
-const EmailItem = ({ email, onClick }) => {
+const SentItems = ({ email, onClick }) => {
   const url = 'https://remail-341c0-default-rtdb.firebaseio.com';
   const dispatch = useDispatch();
   const key = email.id;
+  const endpoint = localStorage.getItem('endpoint');
 
-  const deleteHandler = async (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-
-    const endpoint = localStorage.getItem('endpoint');
-
+  const deleteEmail = async () => {
     try {
       const response = await fetch(`${url}/sent/${endpoint}/${key}.json`, {
         method: 'DELETE',
@@ -34,10 +20,7 @@ const EmailItem = ({ email, onClick }) => {
       });
 
       if (response.ok) {
-        // const responseData = await response.json(); // You can extract and log the response data
-
         dispatch(emailActions.deleteEmail(key));
-        // If you need to perform any additional actions, you can do so here
       } else {
         throw new Error('Failed to delete the email. Status: ' + response.status);
       }
@@ -47,35 +30,32 @@ const EmailItem = ({ email, onClick }) => {
     }
   };
 
-  //individual item displaying
+  const handleDeleteClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    deleteEmail();
+  };
+
   const handleItemClick = () => {
-    onClick(email); // Call the onClick function with the email as a parameter
+    onClick(email);
   };
 
   return (
     <Link
       to={{
-        pathname: `/inbox/${email.id}`,
+        pathname: `/sent/${email.id}`,
         state: { emailData: email }
       }}
       style={{ textDecoration: 'none', color: 'black' }}
-      onClick={handleItemClick} // Call the handleItemClick function when the link is clicked
+      onClick={handleItemClick}
     >
       <Card className="email-item">
-        <Card.Body >
+        <Card.Body>
           <div className="d-flex justify-content-between align-items-center">
-            {!email.read && <span style={unreadDotStyle}></span>}
-            {/* <input type="checkbox" className="mr-2" /> */}
-            <Card.Title className="mb-0">{email.sender}</Card.Title>
             <Card.Title className="mb-0">{email.to}</Card.Title>
             <Card.Title className="mb-2">{email.subject}</Card.Title>
-
-            <small className="text-muted">
-
-              {email.time}
-
-            </small>
-            <i className="bi bi-trash3" onClick={deleteHandler}></i>
+            <small className="text-muted">{email.time}</small>
+            <i className="bi bi-trash3" onClick={handleDeleteClick}></i>
           </div>
           <Card.Text>{email.snippet}</Card.Text>
         </Card.Body>
@@ -84,4 +64,4 @@ const EmailItem = ({ email, onClick }) => {
   );
 };
 
-export default EmailItem;
+export default SentItems;

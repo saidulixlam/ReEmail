@@ -5,6 +5,7 @@ import { bgurl } from '../../ui/background';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../store/authSlice';
+import { emailActions } from '../../store/emailSlice';
 
 const Login = () => {
   const history = useHistory();
@@ -84,10 +85,12 @@ const Login = () => {
 
         throw new Error(errorMessage);
       }
-    //  
+      
       const data = await response.json();
       const email = data.email;
+      
       dispatch(authActions.login(data.idToken)); 
+      dispatch(emailActions.setEmail(email));
       const endpoint = `${email.replace(/\.|@/g, '')}`;
       localStorage.setItem('endpoint', endpoint);
       localStorage.setItem('email',email);
