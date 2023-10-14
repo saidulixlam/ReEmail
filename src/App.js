@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import NavBar from './components/Navbar/Navbar';
 import Inbox from './components/Email/Inbox';
 import EmailView from './components/Email/EmailView'; // Import the EmailView component
+import Login from './components/pages/Login';
 
 function App() {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -17,6 +18,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/inbox" exact component={Inbox} />
+          <Route path="/login" exact component={Login} />
           {/* Add a route for viewing individual emails */}
           <Route path="/inbox/emails/:subject" component={EmailView} />
         </Switch>

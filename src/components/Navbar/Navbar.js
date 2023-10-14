@@ -14,6 +14,9 @@ const NavBar = () => {
     dispatch(toggleSidebar()); // Dispatch the action to toggle the Sidebar
   };
 
+  const userEmail = localStorage.getItem('email');
+  const userName = userEmail.split('@')[0];
+  
   return (
     <Fragment>
       <Navbar expand="lg" className="bg-info">
@@ -45,10 +48,18 @@ const NavBar = () => {
               <i className="bi bi-search p-1 mx-1 lg-2"></i>
             </Button>
           </div>
+          <div className="text-white d-flex justify-content-between align-items-center bg-primary  p-2 shadow-lg" style={{ borderRadius: '25px' }}>
 
-          <Link to="/home" className="text-white"> {/* Added margin and align-items */}
-            <i className="bi bi-house mx-2 mx-lg-3" style={{ fontSize: '1.5rem' }}></i>
-          </Link>
+            <Link to="/home" className="text-white "> {/* Added margin and align-items */}
+
+              <i className="bi bi-person mx-2 mx-lg-3" style={{ fontSize: '1.5rem' }}></i>
+
+            </Link>
+            
+              {userName}
+            
+          </div>
+
         </Container>
       </Navbar>
       <SideBar />

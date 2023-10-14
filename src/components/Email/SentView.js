@@ -8,21 +8,21 @@ const SentView = (props) => {
   const location = useLocation();
   const emailData = location.state.emailData; // Access the email data from the location state
 
-  const timeParts = emailData.time.split(' ');
-
-  const datePart = timeParts[0];
-
-  const date = new Date(datePart);
-
+  const timeParts = emailData.time.split(' - ');
+  const datePart = timeParts[0]; // Assuming date is in the format "DD/MM/YYYY"
+  
+  // Split the date string into day, month, and year
+  const [day, month, year] = datePart.split('/').map(Number);
+  
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  const day = date.getDate();
-  const month = date.getMonth(); // Returns a zero-based index (0 for January, 1 for February, etc.)
-
-  const formattedMonth = monthNames[month];
-  const formattedDate = ` ${day} ${formattedMonth}`;
+  
+  const formattedMonth = monthNames[month - 1]; // Adjust for 0-based month
+  const formattedDate = `${day} ${formattedMonth} ${year}`;
+  
+  console.log(formattedDate); // This should display the formatted date
 
   const history = useHistory();
 
@@ -47,10 +47,10 @@ const SentView = (props) => {
         <i className="bi bi-person-circle" style={{ fontSize: '3rem' }}></i>
         <div>
           <div className="d-flex">
-            <p><strong>{emailData.sender}</strong>&nbsp;</p>
+            <p className="text-muted">{emailData.sender}&nbsp;</p>
             <span className='text-muted'>&nbsp;{formattedDate}</span>
           </div>
-          <p className="text-muted">to {emailData.to}</p>
+          <p ><span className='text-muted'>to&nbsp;</span><strong>{emailData.to}</strong></p>
         </div>
         <i className='bi bi-reply mx-2' style={{ fontSize: '2rem' }}></i>
         <i className="bi bi-three-dots-vertical" style={{ fontSize: '2rem' }} ></i> {/* style={{ fontSize: '3rem' }} */}

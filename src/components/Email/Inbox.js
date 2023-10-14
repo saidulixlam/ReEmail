@@ -7,7 +7,7 @@ import useMailAPI from '../utils/useMail';
 
 const Inbox = () => {
   const emails = useSelector((state) => state.email.inboxEmails);
-  console.log(emails);
+  
   const emailItems = useMailAPI('inbox');
 
   const [selectedEmail, setSelectedEmail] = useState(null);
@@ -16,12 +16,12 @@ const Inbox = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       emailItems.fetchDataAndUpdateStore();
-    }, 3000);
+    }, 2000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [emails]);
 
   const handleEmailClick = (email) => {
     setSelectedEmail(email);

@@ -10,22 +10,20 @@ const EmailView = (props) => {
   const key = emailData.id;
   const endpoint = localStorage.getItem('endpoint');
 
-  const timeParts = emailData.time.split(' ');
+  const userEmail = localStorage.getItem('email')
 
-  const datePart = timeParts[0];
-
-  const date = new Date(datePart);
+  const timeParts = emailData.time.split(' - ');
+  const datePart = timeParts[0]; // Assuming date is in the format "DD/MM/YYYY"
+  // Split the date string into day, month, and year
+  const [day, month, year] = datePart.split('/').map(Number);
 
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  const day = date.getDate();
-  const month = date.getMonth(); // Returns a zero-based index (0 for January, 1 for February, etc.)
-  const year = date.getFullYear();
-  const formattedMonth = monthNames[month];
-  const formattedDate = ` ${day} ${formattedMonth}`;
 
+  const formattedMonth = monthNames[month - 1]; // Adjust for 0-based month
+  const formattedDate = `${day} ${formattedMonth} ${year}`;
 
   const history = useHistory();
   const url = 'https://remail-341c0-default-rtdb.firebaseio.com';
@@ -55,8 +53,7 @@ const EmailView = (props) => {
     }
   }
 
-
-
+  console.log(emailData);
   // Function to handle closing the modal
   const handleCloseModal = () => {
     // You can use the history object to navigate back to the inbox or any other route
@@ -79,10 +76,10 @@ const EmailView = (props) => {
         <i className="bi bi-person-circle" style={{ fontSize: '3rem' }}></i>
         <div>
           <div className="d-flex">
-            <p><strong>{emailData.sender}</strong>&nbsp;</p>
+            <p><span className='text-muted'>From&nbsp;</span><strong>{emailData.sender}</strong>&nbsp;</p>
             <span className='text-muted'>&nbsp;{formattedDate}</span>
           </div>
-          <p className="text-muted">to {emailData.to}</p>
+          <p className="text-muted">to {userEmail}</p>
         </div>
         <i className='bi bi-reply mx-2' style={{ fontSize: '2rem' }}></i>
         <i className="bi bi-three-dots-vertical" style={{ fontSize: '2rem' }} ></i> {/* style={{ fontSize: '3rem' }} */}

@@ -26,7 +26,7 @@ const EmailItem = ({ email, onClick }) => {
     const endpoint = localStorage.getItem('endpoint');
 
     try {
-      const response = await fetch(`${url}/sent/${endpoint}/${key}.json`, {
+      const response = await fetch(`${url}/inbox/${endpoint}/${key}.json`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

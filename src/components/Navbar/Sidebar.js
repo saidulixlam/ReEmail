@@ -9,6 +9,9 @@ import Draft from '../Email/Draft';
 import ComposeEmail from '../Email/ComposeEmail';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import useMailAPI from '../utils/useMail';
+import { useEffect } from 'react';
 // import { useEffect } from 'react';
 
 const SideBar = () => {
@@ -17,21 +20,26 @@ const SideBar = () => {
   const activeFolder = useSelector((state) => state.ui.activeFolder);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
+  const history=useHistory();
 
   const inboxEmails = useSelector((state)=>state.email.inboxEmails);
+  
+  const sentEmails=useSelector((state)=>state.email.sentEmails);
   console.log(inboxEmails);
-
+  console.log(sentEmails);
     const unreadCount = inboxEmails.reduce((count, email) => {
       if (!email.read) {
         return count + 1;
       }
       return count;
     }, 0);
-  
+
+    const sendCount = sentEmails.length;
   function LogoutHandler() {
     localStorage.removeItem('token');
     localStorage.removeItem('endpoint')
     dispatch(authActions.logout());
+    history.replace('/login')
   }
 
   const toggleFolder = (folderName) => {
@@ -98,7 +106,7 @@ const SideBar = () => {
                       <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">{unreadCount}+new</span>
                     )}
                     {folderName === 'sent' && (
-                      <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">1+new</span>
+                      <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">{sendCount}++</span>
                     )}
                     {folderName === 'draft' && (
                       <span style={{ order: 4 }} className="text-white bg-info rounded circle p-1">1+new</span>
