@@ -25,8 +25,7 @@ const SideBar = () => {
   const inboxEmails = useSelector((state)=>state.email.inboxEmails);
   
   const sentEmails=useSelector((state)=>state.email.sentEmails);
-  console.log(inboxEmails);
-  console.log(sentEmails);
+  
     const unreadCount = inboxEmails.reduce((count, email) => {
       if (!email.read) {
         return count + 1;

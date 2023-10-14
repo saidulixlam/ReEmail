@@ -66,7 +66,7 @@ const EmailItem = ({ email, onClick }) => {
           <div className="d-flex justify-content-between align-items-center">
             {!email.read && <span style={unreadDotStyle}></span>}
             {/* <input type="checkbox" className="mr-2" /> */}
-            <Card.Title className="mb-0">{email.sender}</Card.Title>
+            <Card.Title className="mb-0"><span className="text-muted">From : </span>{email.sender}</Card.Title>
             <Card.Title className="mb-0">{email.to}</Card.Title>
             <Card.Title className="mb-2">{email.subject}</Card.Title>
 

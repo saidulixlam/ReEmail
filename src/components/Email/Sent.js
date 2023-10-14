@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SentView from './SentView';
-import useMailAPI from '../utils/useMail';
+// import useMailAPI from '../utils/useMail';
 import SentItems from './SentItems';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 const Sent = () => {
   const sentEmails = useSelector((state) => state.email.sentEmails);

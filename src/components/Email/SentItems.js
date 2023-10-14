@@ -52,7 +52,7 @@ const SentItems = ({ email, onClick }) => {
       <Card className="email-item">
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center">
-            <Card.Title className="mb-0">{email.to}</Card.Title>
+            <Card.Title className="mb-0"><span className="text-muted">To : </span>{email.to}</Card.Title>
             <Card.Title className="mb-2">{email.subject}</Card.Title>
             <small className="text-muted">{email.time}</small>
             <i className="bi bi-trash3" onClick={handleDeleteClick}></i>

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import EmailItem from './EmailItems';
 import EmailView from './EmailView';
 import { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import useMailAPI from '../utils/useMail';
 
 const Inbox = () => {
-  const emails = useSelector((state) => state.email.inboxEmails);
-  
+  // const emails = useSelector((state) => state.email.inboxEmails);
+  console.log('i am inbox');
   const emailItems = useMailAPI('inbox');
 
   const [selectedEmail, setSelectedEmail] = useState(null);
@@ -17,12 +17,12 @@ const Inbox = () => {
     const intervalId = setInterval(() => {
       emailItems.fetchDataAndUpdateStore();
     }, 2000);
-
+    console.log('i am inbox useefect');
     return () => {
       clearInterval(intervalId);
     };
-  }, [emails]);
-
+  }, []);
+ 
   const handleEmailClick = (email) => {
     setSelectedEmail(email);
     setShowEmailView(true);
