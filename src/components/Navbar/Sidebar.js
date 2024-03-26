@@ -38,6 +38,7 @@ const SideBar = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('endpoint')
     dispatch(authActions.logout());
+    
     history.replace('/login')
   }
 
